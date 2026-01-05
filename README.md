@@ -87,50 +87,93 @@ This project uses:
 
 ### Prerequisites
 - Vercel account
-- Flutter SDK installed
-- Git repository (optional, but recommended)
+- Git repository (recommended)
 
-### Steps
+### Method 1: Automatic Build (Recommended)
 
-1. **Build the Flutter web app:**
+The project includes a `build.sh` script that automatically installs Flutter and builds the app in Vercel's environment.
+
+1. **Push your code to GitHub:**
+   ```bash
+   git add .
+   git commit -m "Prepare for Vercel deployment"
+   git push
+   ```
+
+2. **Connect to Vercel:**
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
+   - Click "New Project"
+   - Import your GitHub repository
+   - Vercel will automatically detect the `vercel.json` configuration
+
+3. **Deploy:**
+   - Vercel will run the `build.sh` script automatically
+   - The script installs Flutter SDK and builds your app
+   - First deployment may take 5-10 minutes (Flutter installation)
+
+### Method 2: Build Locally and Deploy
+
+If you prefer to build locally (faster deployments):
+
+1. **Build the Flutter web app locally:**
    ```bash
    flutter build web --release --base-href /
    ```
 
-2. **Deploy to Vercel:**
-   
-   **Option A: Using Vercel CLI**
+2. **Deploy using Vercel CLI:**
    ```bash
    npm i -g vercel
-   vercel
+   vercel --prod
    ```
    
-   **Option B: Using GitHub Integration**
-   - Push your code to GitHub
-   - Connect your repository to Vercel
-   - Vercel will automatically detect the `vercel.json` configuration
+   Or deploy only the build folder:
+   ```bash
+   cd build/web
+   vercel --prod
+   ```
 
-3. **Configuration:**
-   - The `vercel.json` file is already configured with:
-     - Build command: `flutter build web --release --base-href /`
-     - Output directory: `build/web`
-     - SPA routing: All routes redirect to `index.html`
-     - Proper headers for PWA support
+### Method 3: GitHub Actions (Advanced)
+
+For automated CI/CD, use the included GitHub Actions workflow:
+
+1. Add Vercel secrets to your GitHub repository:
+   - `VERCEL_TOKEN`
+   - `VERCEL_ORG_ID`
+   - `VERCEL_PROJECT_ID`
+
+2. Push to main/master branch to trigger automatic deployment
+
+### Configuration
+
+The `vercel.json` file is configured with:
+- **Build command**: `bash build.sh` (installs Flutter and builds)
+- **Output directory**: `build/web`
+- **SPA routing**: All routes redirect to `index.html`
+- **Security headers**: XSS protection, frame options, etc.
 
 ### Important Notes
 
 - The `start_url` in `manifest.json` is set to `/` (root) for proper deployment
 - Service worker is configured to work with absolute paths
 - All routes are configured to serve `index.html` for SPA routing
-- The build output directory is `build/web`
+- First deployment may take longer due to Flutter SDK installation
 
 ### Troubleshooting
 
-If you encounter 404 errors:
+**Error: "flutter: command not found"**
+- ✅ Fixed! The `build.sh` script now installs Flutter automatically
+- If issues persist, try Method 2 (build locally)
+
+**404 errors after deployment:**
 1. Ensure `vercel.json` is in the root directory
 2. Check that the build command completes successfully
 3. Verify the output directory is `build/web`
 4. Make sure `start_url` in `manifest.json` is `/` not `.`
+
+**Build timeout:**
+- First build may take 5-10 minutes (Flutter installation)
+- Subsequent builds are faster (Flutter is cached)
+- If timeout persists, use Method 2 (build locally)
 
 ## License
 
