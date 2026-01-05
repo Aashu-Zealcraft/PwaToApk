@@ -32,7 +32,7 @@ flutter pub get
 
 # Build web app
 echo "Building Flutter web app for production..."
-flutter build web --release --base-href / --web-renderer canvaskit
+flutter build web --release --base-href /
 
 echo "✅ Build completed successfully!"
 
