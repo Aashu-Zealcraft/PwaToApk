@@ -83,6 +83,55 @@ This project uses:
 - WebView for displaying web content
 - PWA best practices for web deployment
 
+## Deployment to Vercel
+
+### Prerequisites
+- Vercel account
+- Flutter SDK installed
+- Git repository (optional, but recommended)
+
+### Steps
+
+1. **Build the Flutter web app:**
+   ```bash
+   flutter build web --release --base-href /
+   ```
+
+2. **Deploy to Vercel:**
+   
+   **Option A: Using Vercel CLI**
+   ```bash
+   npm i -g vercel
+   vercel
+   ```
+   
+   **Option B: Using GitHub Integration**
+   - Push your code to GitHub
+   - Connect your repository to Vercel
+   - Vercel will automatically detect the `vercel.json` configuration
+
+3. **Configuration:**
+   - The `vercel.json` file is already configured with:
+     - Build command: `flutter build web --release --base-href /`
+     - Output directory: `build/web`
+     - SPA routing: All routes redirect to `index.html`
+     - Proper headers for PWA support
+
+### Important Notes
+
+- The `start_url` in `manifest.json` is set to `/` (root) for proper deployment
+- Service worker is configured to work with absolute paths
+- All routes are configured to serve `index.html` for SPA routing
+- The build output directory is `build/web`
+
+### Troubleshooting
+
+If you encounter 404 errors:
+1. Ensure `vercel.json` is in the root directory
+2. Check that the build command completes successfully
+3. Verify the output directory is `build/web`
+4. Make sure `start_url` in `manifest.json` is `/` not `.`
+
 ## License
 
 © 2024 PWA to APK
